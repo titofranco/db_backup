@@ -15,12 +15,12 @@ options = {
   :password => nil,
 }
 
-CONFIG_FILE = File.join(ENV['HOME'],'.db_backup.rc.yaml')
+CONFIG_FILE = File.join(ENV['HOME'], '.db_backup.rc.yaml')
 if File.exists? CONFIG_FILE
   config_options = YAML.load_file(CONFIG_FILE)
   options.merge!(config_options)
 else
-  File.open(CONFIG_FILE,"w") {|file| YAML::dump(options,file)}
+  File.open(CONFIG_FILE, "w") {|file| YAML::dump(options, file)}
   STDERR.puts "Initialized configuration file in #{CONFIG_FILE}"
 end
 
@@ -30,23 +30,23 @@ option_parser = OptionParser.new do |opts|
   opts.banner = "Backup one or more MYSQL databases
 
   Usage: #{executable_name} [options] database_name"
-  opts.on("-i","--end-of-iteration", 'Indicate that this backup is an "iteration" backup') do
+  opts.on("-i", "--end-of-iteration", 'Indicate that this backup is an "iteration" backup') do
     options[:iteration] = true
   end
 
-  opts.on("-u USER","--username",/^.+$/,'Database username') do |user|
+  opts.on("-u USER", "--username", /^.+$/, 'Database username') do |user|
     options[:username] = user
   end
 
-  opts.on("-p PASSWORD","--pasword",'Database Password') do |password|
+  opts.on("-p PASSWORD", "--pasword", 'Database Password') do |password|
     options[:password] = password
   end
 
-  opts.on("--no-gzip","Do not compress the backup file") do |a|
+  opts.on("--no-gzip", "Do not compress the backup file") do |a|
     options[:gzip] = false
   end
 
-  opts.on("--[no-]force","Overwrite existing files") do |force|
+  opts.on("--[no-]force", "Overwrite existing files") do |force|
     options[:force] = force
   end
 end
@@ -82,7 +82,10 @@ else
   backup_file_name = database_name + '_' + Time.now.strftime('%Y%m%d')
 end
 
-output_file = "db_backup/#{backup_file_name}.sql"
+path = ENV['HOME'] + "/db_backup"
+system("mkdir -p #{path}") unless File.directory?(path)
+
+output_file = "#{path}/#{backup_file_name}.sql"
 
 if File.exists? output_file
   if options[:force]
@@ -105,7 +108,6 @@ unless status.exitstatus == 0
 #  puts stderr
   exit -1
 end
-
 
 if options[:gzip]
   `gzip #{output_file}`
