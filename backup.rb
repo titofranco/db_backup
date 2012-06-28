@@ -79,7 +79,7 @@ auth += "-p#{options[:password]} " if options[:password]
 if options[:iteration]
   backup_file_name = database_name + '_' + ARGV[1]
 else
-  backup_file_name = database_name + '_' + Time.now.strftime('%Y%m%d')
+  backup_file_name = database_name + '_' + Time.now.strftime('%Y%m%d-%H:%M')
 end
 
 path = ENV['HOME'] + "/db_backup"
