@@ -94,34 +94,34 @@ def migration_command(version_number)
 end
 
 dc_states = migration_command(20110722140646)
-states =  " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name #{auth} --local #{database_name} #{path_to_file}/states.csv; "
+states =  " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/states.csv; "
 
 dc_cities = migration_command(20110722140939)
-cities =  " mysqlimport --delete --fields-terminated-by=',' --ignore-lines=1  --columns=id,state_id,name #{auth} --local #{database_name} #{path_to_file}/cities.csv; "
+cities =  " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,state_id,name,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/cities.csv; "
 
 dc_categories = migration_command(20110718223500)
-categories = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name #{auth} --local #{database_name} #{path_to_file}/categories.csv; "
+categories = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name,description,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/categories.csv; "
 
 dc_invoice_enumerations = migration_command(20110921145812)
-invoice_enumerations =  " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=invoice_type,issue_date,prefix,initial_number,final_number,resolution_number #{auth} --local #{database_name} #{path_to_file}/invoice_enumerations.csv; "
+invoice_enumerations =  " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=invoice_type,issue_date,prefix,initial_number,final_number,resolution_number,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/invoice_enumerations.csv; "
 
 dc_products = "cd #{@path_to_app} && bundle exec rake db:migrate:down VERSION=20110718200308 RAILS_ENV=#{@rails_env} ; cd #{@path_to_app} && bundle exec rake db:migrate:down VERSION=20110718192227 RAILS_ENV=#{@rails_env} ; cd #{@path_to_app} && bundle exec rake db:migrate:up VERSION=20110718192227 RAILS_ENV=#{@rails_env} ; cd #{@path_to_app} && bundle exec rake db:migrate:up VERSION=20110718200308  RAILS_ENV=#{@rails_env};"
 products = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,barcode,category_id,name,origin,manufacturer,reference,location,quantity,avg_cost,price,status,vat_pct,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/products.csv; "
 
 dc_supplier_product_listings = migration_command(20120509165420)
-supplier_product_listings = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=reference,alternate_reference,description,manufacturer,origin,price,category_name  #{auth} --local #{database_name} #{path_to_file}/supplier_product_listings.csv;"
+supplier_product_listings = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=category_name,car_make,reference,alternate_reference,description,manufacturer,origin,price #{auth} --local #{database_name} #{path_to_file}/supplier_product_listings.csv;"
 
 dc_car_makes = migration_command(20120511200801)
-car_makes = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name #{auth} --local #{database_name} #{path_to_file}/car_makes.csv; "
+car_makes = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1  --columns=id,name,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/car_makes.csv; "
 
 dc_sales = migration_command(20110915145625)
-sales = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,type,customer_id,entry_date,expiration_date,invoice_number,gross_value,disc_pct,discount,vat,total,paid_value,refund_value,balance,user_id,status,note,created_at,updated_at  #{auth} --local #{database_name} #{path_to_file}/sales.csv;"
+sales = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,type,customer_id,entry_date,expiration_date,invoice_number,gross_value,disc_pct,discount,vat,total,paid_value,refund_value,balance,status,note,user_id,created_at,updated_at  #{auth} --local #{database_name} #{path_to_file}/sales.csv;"
 
 dc_sale_details = migration_command(20110915154446)
 sale_details = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=sale_id,product_id,quantity,suggested_price,sale_price,vat_pct,total,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/sale_details.csv;"
 
 dc_purchases = migration_command(20110726144725)
-purchases = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,type,supplier_id,entry_date,expiration_date,invoice_number,gross_value,disc_pct,discount,freight,vat,withholding_source,refund_value,paid_value,total,balance,consecutive_number,status,note,user_id,created_at,updated_at  #{auth} --local #{database_name} #{path_to_file}/purchases.csv; "
+purchases = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,type,entry_date,expiration_date,supplier_id,invoice_number,gross_value,disc_pct,discount,freight,vat,withholding_source,total,paid_value,refund_value,balance,note,consecutive_number,status,user_id,created_at,updated_at  #{auth} --local #{database_name} #{path_to_file}/purchases.csv; "
 
 dc_purchase_details = migration_command(20110728223349)
 purchase_details = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=purchase_id,product_id,quantity,cost,vat_pct,total,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/purchase_details.csv;"
@@ -145,10 +145,10 @@ dc_suppliers = migration_command(20110721210926)
 suppliers = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,name,id_type,id_number,regime_type,large_taxpayer,large_withholder,bank_name,account_type,account_number,agreement_number,main_number,office_number,fax,cellphone,contact_person,address,city_id,state_id,email,web_page,note,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/suppliers.csv; "
 
 dc_customers = migration_command(20110914183651)
-customers = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,name,id_type,id_number,main_number,fax,cellphone,address,state_id,city_id,note,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/customers.csv; "
+customers = " mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,id_type,id_number,name,main_number,fax,cellphone,email,address,state_id,city_id,note,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/customers.csv; "
 
 dc_employees = migration_command(20111004160111)
-employees = "  mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,id_type,id_number,first_name,last_name,birth_date,sex,cellphone,home_phone,other_phone,email,address,city_id,state_id,hire_date,fired_date,position,salary,commission_pct,note #{auth} --local #{database_name} #{path_to_file}/employees.csv; "
+employees = "  mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,id_type,id_number,first_name,last_name,birth_date,sex,cellphone,home_phone,other_phone,email,address,city_id,state_id,hire_date,fired_date,position,salary,commission_pct,note,status,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/employees.csv; "
 
 dc_withholdings = migration_command(20110818160607)
 withholdings = "  mysqlimport --delete --fields-terminated-by='|' --ignore-lines=1 --columns=id,year,limit_value,percentage,created_at,updated_at #{auth} --local #{database_name} #{path_to_file}/withholdings.csv; "
